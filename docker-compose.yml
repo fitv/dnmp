@@ -40,8 +40,9 @@ services:
             MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
         volumes:
             - "./mysql/log:/var/log/mysql"
-            - "./mysql/data:/var/lib/mysql"
+            - "${DATA_PATH_HOST}/mysql:/var/lib/mysql"
             - "./mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf"
+        entrypoint: bash -c "chown -R mysql:mysql /var/log/mysql && exec /entrypoint.sh mysqld"
         restart: always
         networks:
             - backend
@@ -52,7 +53,7 @@ services:
         ports:
             - "6379:6379"
         volumes:
-            - "./redis/data:/data"
+            - "${DATA_PATH_HOST}/redis:/data"
         restart: always
         networks:
             - backend

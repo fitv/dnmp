@@ -1,7 +1,1 @@
 .env
-mysql/log
-mysql/data
-nginx/cert
-nginx/log
-php/log
-redis/data

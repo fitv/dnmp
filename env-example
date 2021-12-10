@@ -1,5 +1,7 @@
 TZ=Asia/Shanghai
 
+DATA_PATH_HOST=~/.sail/data
+
 WORKSPACE_PATH_HOST=~/workspace
 
 REDIS_PASSWORD=1
