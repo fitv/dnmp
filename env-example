@@ -1,0 +1,7 @@
+TZ=Asia/Shanghai
+
+WORKSPACE_PATH_HOST=~/workspace
+
+REDIS_PASSWORD=1
+
+MYSQL_ROOT_PASSWORD=1
