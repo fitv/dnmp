@@ -1,2 +1,2 @@
-# Sail
+# DNMP
 Docker LNMP (Nginx, PHP, MySQL, Redis)
