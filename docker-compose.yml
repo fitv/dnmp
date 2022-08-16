@@ -1,13 +1,14 @@
 version: "3"
+
 services:
     nginx:
-        image: "nginx:alpine"
+        image: "nginx:1.22"
         ports:
             - "80:80"
             - "443:443"
         working_dir: /www
         volumes:
-            - "${WORKSPACE_PATH_HOST}:/www"
+            - "${WORKSPACE_PATH}:/www"
             - "./nginx/log:/var/log/nginx"
             - "./nginx/cert:/etc/nginx/cert"
             - "./nginx/conf.d:/etc/nginx/conf.d"
@@ -23,7 +24,7 @@ services:
             args:
                 TZ: "${TZ}"
         volumes:
-            - "${WORKSPACE_PATH_HOST}:/www"
+            - "${WORKSPACE_PATH}:/www"
             - "./php/log:/var/log/php"
             - "./php/php.ini:/usr/local/etc/php/php.ini"
             - "./php/www.conf:/usr/local/etc/php-fpm.d/www.conf"
@@ -40,23 +41,38 @@ services:
             MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
         volumes:
             - "./mysql/log:/var/log/mysql"
-            - "${DATA_PATH_HOST}/mysql:/var/lib/mysql"
+            - "${DATA_PATH}/mysql:/var/lib/mysql"
             - "./mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf"
         entrypoint: bash -c "chown -R mysql:mysql /var/log/mysql && exec /entrypoint.sh mysqld"
         restart: always
         networks:
             - backend
     redis:
-        image: "redis:alpine"
-        command: >
-                --requirepass ${REDIS_PASSWORD}
+        image: "redis:7.0"
         ports:
             - "6379:6379"
         volumes:
-            - "${DATA_PATH_HOST}/redis:/data"
+            - "${DATA_PATH}/redis:/data"
+            - "./redis/redis.conf:/usr/local/etc/redis/redis.conf"
+        restart: always
+        command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "${REDIS_PASSWORD}"]
+        networks:
+            - backend
+    supervisor:
+        build:
+            context: ./supervisor
+            args:
+                TZ: "${TZ}"
+        volumes:
+            - "${WORKSPACE_PATH}:/www"
+            - "./supervisor/php.ini:/usr/local/etc/php/php.ini"
+            - "./supervisor/log:/var/log/supervisor"
+            - "./supervisor/conf.d:/etc/supervisor/conf.d"
+            - "./supervisor/supervisord.conf:/etc/supervisor/supervisord.conf"
         restart: always
         networks:
             - backend
+
 networks:
     backend:
         driver: bridge

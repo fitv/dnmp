@@ -1,9 +1,9 @@
 TZ=Asia/Shanghai
 
-DATA_PATH_HOST=~/.sail/data
+DATA_PATH=~/.dnmp/data
 
-WORKSPACE_PATH_HOST=~/workspace
+WORKSPACE_PATH=~/workspace
 
-REDIS_PASSWORD=1
+REDIS_PASSWORD=secret
 
-MYSQL_ROOT_PASSWORD=1
+MYSQL_ROOT_PASSWORD=secret
